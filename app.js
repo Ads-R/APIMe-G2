@@ -1,9 +1,20 @@
+require('express-async-errors')
+require('dotenv').config();
+
+const cors = require('cors');
+
 const express = require('express');
 const app = express();
 const DBconnect = require('./MongoDB/dbconnection');
-require('dotenv').config();
+const movieRoutes = require('./routes/movieRoute')
 
-const port = 3500;
+app.use(express.static('./public'));
+
+const port = process.env.PORT;
+
+app.use(cors());
+
+app.use('/apime/movies', movieRoutes)
 
 const initialize = async () => {
     try{
@@ -16,5 +27,4 @@ const initialize = async () => {
         console.log(error);
     }
 };
-
 initialize();
