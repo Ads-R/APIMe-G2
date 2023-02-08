@@ -1,5 +1,5 @@
 const movieModel = require('../models/movieModel')
-const os = require('os')
+const {NotFoundError} = require('../custom-errors')
 
 const getAllMovies = async (req, res) => {
     //filter - category, title
@@ -24,18 +24,18 @@ const getAllMovies = async (req, res) => {
     }
     moviesQuery.select('-__v')
 
-    const tempMovies = await moviesQuery;
-    const movies = await tempMovies.map((m) =>{
-        m.image = `http://${req.hostname}:${process.env.PORT}/images/`+m.image
-        return m
-    })
+    const movies = await moviesQuery;
 
-    res.status(200).json({movies})
+    res.status(200).json({success:true, movies})
 }
 
 const getSingleMovie = async (req, res) => {
-    const movie = await movieModel.findOne({id:req.id})
-    res.status(200).json({movie})
+    const {id:movieId} = req.params
+    const movie = await movieModel.findOne({_id:movieId})
+    if(!movie){
+        throw new NotFoundError('movie', movieId)
+    }
+    res.status(200).json({success:true, movie})
 }
 
 

@@ -1,4 +1,4 @@
 /node_modules
-/sampleData
+/populateDB
 /public
 .env
