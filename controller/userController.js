@@ -1,18 +1,19 @@
 const userModel = require('../models/userModel')
 const {sendCookies} = require('../functions/auth-functions')
+const {Unauthenticated, BadRequest} = require('../custom-errors')
 
 const login = async (req, res) => {
     const {username, password} = req.body
     if(!username || !password){
-        throw new Error('Username and Password are required')
+        throw new BadRequest('Username and Password are required')
     }
     const user = await userModel.findOne({username})
     if(!user){
-        throw new Error('Invalid Username or Password')
+        throw new Unauthenticated('Invalid Username or Password')
     }
     const isValid = await user.validatePassword(password)
     if(!isValid){
-        throw new Error('Invalid Username or Password')
+        throw new Unauthenticated('Invalid Username or Password')
     }
     const token = user.generateToken()
     sendCookies(res, token)
@@ -32,7 +33,7 @@ const register = async (req, res) => {
     const {username, password} = req.body
     const userExists = await userModel.findOne({username})
     if(userExists){
-        throw new Error('Duplicate username')
+        throw new BadRequest('Duplicate username')
     }
     await userModel.create({username, password})
 

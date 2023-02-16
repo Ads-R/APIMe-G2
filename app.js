@@ -6,6 +6,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload')
 
 const DBconnect = require('./MongoDB/dbconnection');
 
@@ -22,6 +23,7 @@ const port = process.env.PORT;
 
 app.use(express.json())
 app.use(cookieParser(process.env.TOKEN_SECRET))
+app.use(fileUpload({limits:{fileSize: 1024 * 512}}))
 
 app.use(cors());
 
