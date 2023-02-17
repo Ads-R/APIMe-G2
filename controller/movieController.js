@@ -6,7 +6,7 @@ const getAllMovies = async (req, res) => {
     //filter - category, title
     //sort - yearReleased, title
     //select - -__v
-    const {category, title, sort} = req.query
+    const {category, title, sort, page, count} = req.query
     const query = {}
     if(category){
         query.category = category 
@@ -25,9 +25,14 @@ const getAllMovies = async (req, res) => {
     }
     moviesQuery.select('-__v')
 
+    const pageNumber = Number(page) || 1
+    const itemCount = Number(count) || 9
+    
+    moviesQuery = moviesQuery.skip(itemCount * (pageNumber-1)).limit(itemCount)
+
     const movies = await moviesQuery;
 
-    res.status(200).json({success:true, movies})
+    res.status(200).json({success:true, count:movies.length, movies})
 }
 
 const getSingleMovie = async (req, res) => {
