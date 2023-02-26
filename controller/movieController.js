@@ -23,7 +23,7 @@ const getAllMovies = async (req, res) => {
     else{
         moviesQuery.sort('title')
     }
-    moviesQuery.select('-__v')
+    moviesQuery.select('_id title movieRating')
 
     const pageNumber = Number(page) || 1
     const itemCount = Number(count) || 9
@@ -31,8 +31,9 @@ const getAllMovies = async (req, res) => {
     moviesQuery = moviesQuery.skip(itemCount * (pageNumber-1)).limit(itemCount)
 
     const movies = await moviesQuery;
+    const movieCount = await movieModel.countDocuments(query)
 
-    res.status(200).json({success:true, count:movies.length, movies})
+    res.status(200).json({success:true, count:movies.length, totalCount: movieCount, movies})
 }
 
 const getSingleMovie = async (req, res) => {
