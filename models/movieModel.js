@@ -41,4 +41,8 @@ const MovieSchema = new mongoose.Schema({
     }
 })
 
+MovieSchema.pre('remove', async function(){
+    await this.model('Review').deleteMany({movie:this._id})
+})
+
 module.exports = mongoose.model('Movie', MovieSchema)

@@ -1,4 +1,5 @@
 const movieModel = require('../models/movieModel')
+const reviewModel = require('../models/reviewModel')
 const {NotFoundError, BadRequest} = require('../custom-errors')
 const {uploadImage} = require('../functions/upload-functions')
 
@@ -23,7 +24,7 @@ const getAllMovies = async (req, res) => {
     else{
         moviesQuery.sort('title')
     }
-    moviesQuery.select('_id title movieRating')
+    moviesQuery.select('_id title movieRating reviewCount image')
 
     const pageNumber = Number(page) || 1
     const itemCount = Number(count) || 9
@@ -42,7 +43,10 @@ const getSingleMovie = async (req, res) => {
     if(!movie){
         throw new NotFoundError('movie', movieId)
     }
-    res.status(200).json({success:true, movie})
+    const reviews = await reviewModel.find({movie:movieId})
+    .select('-__v')
+    .populate({path: 'user',select: 'username'})
+    res.status(200).json({success:true, reviewCount:reviews.length, movie, reviews})
 }
 
 const uploadMovieImage = async (req, res) => {
@@ -68,7 +72,11 @@ const uploadMovieImage = async (req, res) => {
 }
 
 const addMovie = async (req, res) => {
-    const movie = await movieModel.create(req.body)
+    const {title, yearReleased, director, category, image, description} = req.body
+    const movieObject = {
+        title,yearReleased,director,category,image,description
+    }
+    await movieModel.create(movieObject)
     res.status(201).json({success:true, msg:'Movie successfully added'})
 }
 

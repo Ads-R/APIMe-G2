@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const {getAllMovies, getSingleMovie, uploadMovieImage, addMovie, deleteMovie, updateMovie} = require('../controller/movieController')
-const {getReviewByMovie} = require('../controller/reviewController')
 const {validateUser, validateAuthorization} = require('../middleware/auth-middleware')
 
 router.route('/')
@@ -16,6 +15,5 @@ router.route('/:id')
 .delete([validateUser, validateAuthorization("administrator")],deleteMovie)
 .put([validateUser, validateAuthorization("administrator")], updateMovie)
 
-router.route('/:id/reviews').get(validateUser, getReviewByMovie)
 
 module.exports = router
