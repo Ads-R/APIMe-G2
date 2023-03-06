@@ -40,6 +40,8 @@ const updateReview = async (req, res) => {
 
 const getAllReviews = async (req, res) => {
     const reviews = await reviewModel.find({})
+    .populate({path: 'user', select: 'username'})
+    .populate({path: 'movie', select: 'title'})
     res.status(200).json({success:true, total:reviews.length ,reviews})
 }
 
