@@ -14,6 +14,7 @@ const DBconnect = require('./MongoDB/dbconnection');
 const movieRoutes = require('./routes/movieRoute')
 const userRoutes = require('./routes/userRoute')
 const reviewRoutes = require('./routes/reviewRoute')
+const watchlistRoutes = require('./routes/watchlistRoute')
 
 const middlewareNotFound = require('./middleware/not-found-middleware')
 const middlewareExceptionHandling = require('./middleware/exception-handling-middleware')
@@ -32,6 +33,7 @@ app.use(cors());
 app.use('/apime/movies', movieRoutes)
 app.use('/apime/user', userRoutes)
 app.use('/apime/reviews', reviewRoutes)
+app.use('/apime/watchlist', watchlistRoutes)
 
 app.use(middlewareNotFound)
 app.use(middlewareExceptionHandling)

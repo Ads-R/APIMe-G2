@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel')
+const watchListModel = require('../models/watchlistModel')
 const {sendCookies} = require('../functions/auth-functions')
 const {Unauthenticated, BadRequest} = require('../custom-errors')
 
@@ -35,7 +36,8 @@ const register = async (req, res) => {
     if(userExists){
         throw new BadRequest('Duplicate username')
     }
-    await userModel.create({username, password})
+    const user = await userModel.create({username, password})
+    await watchListModel.create({user: user._id})
 
     res.status(201).json({success:true, msg:'User created'})
 }
