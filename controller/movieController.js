@@ -1,5 +1,6 @@
 const movieModel = require('../models/movieModel')
 const reviewModel = require('../models/reviewModel')
+const actorModel = require('../models/actorModel')
 const {NotFoundError, BadRequest} = require('../custom-errors')
 const {uploadImage} = require('../functions/upload-functions')
 
@@ -40,13 +41,25 @@ const getAllMovies = async (req, res) => {
 const getSingleMovie = async (req, res) => {
     const {id:movieId} = req.params
     const movie = await movieModel.findOne({_id:movieId})
+    //.populate('actors')
+    
     if(!movie){
         throw new NotFoundError('movie', movieId)
     }
     const reviews = await reviewModel.find({movie:movieId})
     .select('-__v')
     .populate({path: 'user',select: 'username'})
-    res.status(200).json({success:true, reviewCount:reviews.length, movie, reviews})
+
+    //const actors = await actorModel.find({'movieRoles.movieId':movieId}).select('fullName')
+
+    const actors = await actorModel.aggregate([
+        {$match:{'movieRoles.movieId': movie._id}},
+        {$unwind: '$movieRoles'},
+        {$match: {'movieRoles.movieId': movie._id}},
+        {$group: {_id: '$_id', fullName: {$first: '$fullName'} , movieRoles: {$push: '$movieRoles.characterName'}}}
+    ])
+
+    res.status(200).json({success:true, reviewCount:reviews.length, movie, reviews, actors})
 }
 
 const uploadMovieImage = async (req, res) => {

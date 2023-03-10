@@ -39,7 +39,16 @@ const MovieSchema = new mongoose.Schema({
         type:Number,
         default:0
     }
-})
+}, /*{toJSON:{virtuals:true}, toObject:{virtuals:true}}*/)
+
+//Commented out, incase I changed my mind and want to use virtuals + populate instead of aggregation
+
+// MovieSchema.virtual('actors', {
+//     ref:'Actor',
+//     localField:'_id',
+//     foreignField:'movieRoles.movieId',
+//     justOne:false
+// })
 
 MovieSchema.pre('remove', async function(){
     await this.model('Review').deleteMany({movie:this._id})
