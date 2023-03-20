@@ -41,7 +41,7 @@ ReviewSchema.statics.updateMovieProperties = async function(movieId){
         {$group:{_id:null,movieRating:{$avg:'$reviewRating'},reviewCount:{$sum:1}}}
     ])
     try{
-        await this.model('Movie').findOneAndUpdate({_id:movieId}, {movieRating:aggregation[0]?.movieRating || 0, reviewCount: aggregation[0]?.reviewCount || 0})
+        await this.model('Movie').findOneAndUpdate({_id:movieId}, {movieRating:parseFloat(aggregation[0]?.movieRating || 0).toFixed(2), reviewCount: aggregation[0]?.reviewCount || 0})
     }
     catch(err){
 

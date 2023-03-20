@@ -9,7 +9,11 @@ const MovieSchema = new mongoose.Schema({
     },
     yearReleased: {
         type:Number,
-        required: [true, 'Movie year released is required']
+        required: [true, 'Movie year released is required'],
+        validate: {
+            validator: validateYear,
+            message: 'Year Released must not be greater than the current year and not less than the year 1895'
+        }
     },
     director: {
         type:String,
@@ -53,5 +57,11 @@ const MovieSchema = new mongoose.Schema({
 MovieSchema.pre('remove', async function(){
     await this.model('Review').deleteMany({movie:this._id})
 })
+
+function validateYear(year){
+    const currentYear = new Date().getFullYear()
+    const firstMovie = 1895
+    return year <= currentYear && year >= 1895
+}
 
 module.exports = mongoose.model('Movie', MovieSchema)

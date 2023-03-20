@@ -10,7 +10,10 @@ const isJwtValid = (token) =>
 
 
 const checkOwner = (user, ownerId) => {
-    if(user === ownerId){
+    if(user.id === ownerId){
+        return
+    }
+    if(user.role === 'administrator'){
         return
     }
     throw new Forbidden('User Unauthorized to access this resource.')

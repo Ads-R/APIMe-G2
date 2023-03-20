@@ -19,7 +19,7 @@ const deleteReview = async (req, res) => {
     if(!review){
         throw new NotFoundError('review', reviewId)
     }
-    checkOwner(req.user.id, review.user.toString())
+    checkOwner(req.user, review.user.toString())
     await review.remove()
     res.status(200).json({success:true, msg:'Review has been deleted'})
 }
@@ -30,7 +30,7 @@ const updateReview = async (req, res) => {
     if(!review){
         throw new NotFoundError('review', reviewId)
     }
-    checkOwner(req.user.id, review.user.toString())
+    checkOwner(req.user, review.user.toString())
     const {reviewComment, reviewRating} = req.body
     review.reviewComment = reviewComment
     review.reviewRating = reviewRating
@@ -45,4 +45,14 @@ const getAllReviews = async (req, res) => {
     res.status(200).json({success:true, total:reviews.length ,reviews})
 }
 
-module.exports = {addReview, deleteReview, updateReview, getAllReviews}
+const getMovieReviews = async (req, res) => {
+    const {title} = req.params
+    const movie = await movieModel.findOne({title})
+    let reviews = []
+    if(movie){
+        reviews = await reviewModel.find({movie:movie._id})
+    }
+    res.status(200).json({success:true, total:reviews.length, reviews})
+}
+
+module.exports = {addReview, deleteReview, updateReview, getAllReviews, getMovieReviews}

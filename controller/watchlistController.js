@@ -4,7 +4,7 @@ const {NotFoundError, BadRequest} = require('../custom-errors')
 
 const getUserWatchList = async (req, res) => {
     const watchlists = await watchListModel.findOne({user:req.user.id})
-    .populate({path: 'movieItems.movieId', select: 'title yearReleased'})
+    .populate({path: 'movieItems.movieId', select: 'title yearReleased image'})
     res.status(200).json({success:true, watchlists})
 }
 
