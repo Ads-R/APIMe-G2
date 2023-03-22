@@ -47,7 +47,7 @@ const getAllReviews = async (req, res) => {
 
 const getMovieReviews = async (req, res) => {
     const {title} = req.params
-    const movie = await movieModel.findOne({title})
+    const movie = await movieModel.findOne({title: {$regex: `^${title}$`, $options: 'i'}})
     let reviews = []
     if(movie){
         reviews = await reviewModel.find({movie:movie._id})

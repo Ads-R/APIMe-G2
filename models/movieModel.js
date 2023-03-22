@@ -54,6 +54,9 @@ const MovieSchema = new mongoose.Schema({
 //     justOne:false
 // })
 
+//Create a case insenstive index for the field title, to improve query performance
+MovieSchema.index({title:1}, {collation:{locale:'en', strength:1}})
+
 MovieSchema.pre('remove', async function(){
     await this.model('Review').deleteMany({movie:this._id})
 })
