@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {getUserWatchList, getAllWatchList, addToWatchList, removeFromWatchList, changeMovieWatchStatus} = require('../controller/watchlistController')
+const {getUserWatchList, getAllWatchList, addToWatchList, removeFromWatchList, changeMovieWatchStatus, checkMovieInWatchList} = require('../controller/watchlistController')
 const {validateUser, validateAuthorization} = require('../middleware/auth-middleware')
 
 router.route('/')
@@ -15,5 +15,8 @@ router.route('/:id')
 
 router.route('/hasWatched/:id')
 .put(validateUser, changeMovieWatchStatus)
+
+router.route('/movie/:movieId')
+.get(validateUser, checkMovieInWatchList)
 
 module.exports = router

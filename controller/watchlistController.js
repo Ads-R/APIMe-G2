@@ -8,6 +8,14 @@ const getUserWatchList = async (req, res) => {
     res.status(200).json({success:true, watchlists})
 }
 
+const checkMovieInWatchList = async (req, res) =>{
+    const {movieId} = req.params
+    console.log(movieId)
+    const isInWatchlist = await watchListModel.exists({user:req.user.id, movieItems: { $elemMatch: {movieId: {_id:movieId}}}})
+    console.log(isInWatchlist)
+    res.status(200).json({success:true, isInWatchlist})
+}
+
 const getAllWatchList = async (req, res) => {
     const watchlists = await watchListModel.find({})
     res.status(200).json({success:true, watchlists})
@@ -57,4 +65,4 @@ const changeMovieWatchStatus = async (req, res) =>{
     res.status(200).json({success:true, msg:'Movie item status has been updated'})
 }
 
-module.exports = {getUserWatchList, getAllWatchList, addToWatchList, removeFromWatchList, changeMovieWatchStatus}
+module.exports = {getUserWatchList, getAllWatchList, addToWatchList, removeFromWatchList, changeMovieWatchStatus, checkMovieInWatchList}

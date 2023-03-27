@@ -51,8 +51,20 @@ const getMovieReviews = async (req, res) => {
     let reviews = []
     if(movie){
         reviews = await reviewModel.find({movie:movie._id})
+        .populate({path: 'user', select: 'username'})
+        .populate({path: 'movie', select: 'title'})
     }
     res.status(200).json({success:true, total:reviews.length, reviews})
 }
 
-module.exports = {addReview, deleteReview, updateReview, getAllReviews, getMovieReviews}
+const getReviewById = async (req, res) => {
+    const {id:reviewId} = req.params
+    const review = await reviewModel.findOne({_id:reviewId})
+    if(!review){
+        throw new NotFoundError('review', reviewId)
+    }
+    checkOwner(req.user, review.user.toString())
+    res.status(200).json({sucess:true, review})
+}
+
+module.exports = {addReview, deleteReview, updateReview, getAllReviews, getMovieReviews, getReviewById}

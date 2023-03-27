@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {addReview, deleteReview, updateReview, getAllReviews, getMovieReviews} = require('../controller/reviewController')
+const {addReview, deleteReview, updateReview, getAllReviews, getMovieReviews, getReviewById} = require('../controller/reviewController')
 const {validateUser, validateAuthorization} = require('../middleware/auth-middleware')
 
 router.route('/')
@@ -8,6 +8,7 @@ router.route('/')
 .post(validateUser, addReview)
 
 router.route('/:id')
+.get(validateUser, getReviewById)
 .delete(validateUser, deleteReview)
 .put(validateUser, updateReview)
 
