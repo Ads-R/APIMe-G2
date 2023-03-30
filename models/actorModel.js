@@ -13,10 +13,12 @@ const ActorSchema = new mongoose.Schema({
         type: [{
             movieId: {
                 type: mongoose.Types.ObjectId,
-                ref: 'Movie'
+                ref: 'Movie',
+                required: [true, 'Movie Id is required to add movie roles']
             },
             characterName: {
-                type: String
+                type: String,
+                required: [true, 'Character name is required']
             }
         }]
     }
