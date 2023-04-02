@@ -1,0 +1,887 @@
+openapi: 3.0.0
+info:
+  title: APIMe!
+  contact: {}
+  version: '1.0'
+servers:
+- url: http://localhost:3500/apime
+  variables: {}
+paths:
+  /user/userCheck:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Auth
+      summary: Get Current User
+      operationId: GetCurrentUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /user/logout:
+    get:
+      tags:
+      - Auth
+      summary: Logout - User
+      operationId: Logout-User
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /user/login:
+    post:
+      tags:
+      - Auth
+      summary: Login - User
+      operationId: Login-User
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Login-UserRequest'
+              - example:
+                  username: Admin
+                  password: testpass
+            example:
+              username: Admin
+              password: testpass
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /user/register:
+    post:
+      tags:
+      - Auth
+      summary: Register - User
+      operationId: Register
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisterRequest'
+              - example:
+                  username: DemoUser1
+                  password: testpass
+            example:
+              username: DemoUser1
+              password: testpass
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /movies:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Get All Movies
+      operationId: GetAllMovies
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: The title of the movie
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Movie sort accepted values; yearReleased, title
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Movie category accepted values; Action, Adventure, Drama, Fantasy, Horror, Mystery, Romance, Sci-fi, Thriller
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The page number of the query result. Default is 1 if no value entered
+        - in: query
+          name: count
+          schema:
+            type: integer
+          description: The movie count per page. Default is 9 if no value entered
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Add Movie
+      operationId: AddMovie
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddMovieRequest'
+              - example:
+                  title: Hello
+                  director: blabla
+                  category:
+                  - Sci-fi
+                  - Fantasy
+                  - Action
+                  - Horror
+                  image: /images/default.jpg
+                  description: test description
+                  yearReleased: 2024
+            example:
+              title: Hello
+              director: blabla
+              category:
+              - Sci-fi
+              - Fantasy
+              - Action
+              - Horror
+              image: /images/default.jpg
+              description: test description
+              yearReleased: 2024
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /movies/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The movie ID
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Get SIngle Movie
+      operationId: GetSIngleMovie
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Update Movie
+      operationId: UpdateMovie
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateMovieRequest'
+              - example:
+                  title: Avatar1235
+                  yearReleased: 2009
+                  director: James Cameron
+                  category:
+                  - Sci-fi
+                  description: sample description
+            example:
+              title: Avatar1235
+              yearReleased: 2009
+              director: James Cameron
+              category:
+              - Sci-fi
+              description: sample description
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Delete Movie
+      operationId: DeleteMovie
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /movies/uploadMovieImage:
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+      - Movie
+      summary: Upload Image
+      operationId: UploadImage
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding: {}
+            schema:
+              required:
+              - movieImage
+              type: object
+              properties:
+                movieImage:
+                  type: string
+                  format: binary
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /reviews:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Get All Reviews
+      operationId: GetAllReviews
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Add review
+      operationId: Addreview
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddreviewRequest'
+              - example:
+                  reviewComment: Demo User Review
+                  reviewRating: 5
+                  movie: 6421189d30fb8cd0f1d6423b
+            example:
+              reviewComment: Demo User Review
+              reviewRating: 5
+              movie: 6421189d30fb8cd0f1d6423b
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /reviews/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The review ID
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Get Review By ID
+      operationId: GetReviewByID
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Delete Review
+      operationId: DeleteReview
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Update Review
+      operationId: UpdateReview
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateReviewRequest'
+              - example:
+                  reviewComment: Demo updated review
+                  reviewRating: 3
+            example:
+              reviewComment: Demo updated review
+              reviewRating: 3
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /reviews/movie/{title}:
+    parameters:
+      - in: path
+        name: title
+        schema:
+          type: string
+        required: true
+        description:  The Movie title
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Review
+      summary: Get Movie Reviews By Title
+      operationId: GetMovieReviewsByTitle
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /watchlist:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Get User Watchlist
+      operationId: GetUserWatchlist
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /watchlist/all:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Get All Watchlist
+      operationId: GetAllWatchlist
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /watchlist/movie/{movieId}:
+    parameters:
+      - in: path
+        name: movieId
+        schema:
+          type: string
+        required: true
+        description:  The Movie ID
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Check Movie in Watchlist
+      operationId: CheckMovieinWatchlist
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /watchlist/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The Movie ID
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Add to watchlist
+      operationId: Addtowatchlist
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Remove from Watchlist
+      operationId: RemovefromWatchlist
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /watchlist/hasWatched/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The Movie ID
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Watchlist
+      summary: Change Watch Status
+      operationId: ChangeWatchStatus
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /actors:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Get All Actors
+      operationId: GetAllActors
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Add Actor
+      operationId: AddActor
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddActorRequest'
+              - example:
+                  fullName: Brad Pitt
+                  country: USA
+                  movieRoles:
+                  - movieId: 6426c03fee802778af27386e
+                    characterName: Character One
+                  - movieId: 6426c03fee802778af27386c
+                    characterName: Character Two
+            example:
+              fullName: Brad Pitt
+              country: USA
+              movieRoles:
+              - movieId: 6426c03fee802778af27386e
+                characterName: Character One
+              - movieId: 6426c03fee802778af27386c
+                characterName: Character Two
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /actors/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The Actor ID
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Get Actor By ID
+      operationId: GetActorByID
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Delete Actor
+      operationId: DeleteActor
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Update Actor
+      operationId: UpdateActor
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateActorRequest'
+              - example:
+                  fullName: New Brad Pit23
+                  country: United States
+            example:
+              fullName: New Brad Pit23
+              country: United States
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /actors/addRole/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The Actor ID
+    put:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Add Movie Role
+      operationId: AddMovieRole
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddMovieRoleRequest'
+              - example:
+                  movieId: 6426c03fee802778af27386e
+                  characterName: Character One
+            example:
+              movieId: 6426c03fee802778af27386e
+              characterName: Character One
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /actors/removeRole/{id}/movie/{movieId}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  The Actor ID
+      - in: path
+        name: movieId
+        schema:
+          type: string
+        required: true
+        description:  The Movie ID
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+      - Actor
+      summary: Remove Movie Role
+      operationId: RemoveMovieRole
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: apimeToken
+  schemas:
+    Login-UserRequest:
+      title: Login-UserRequest
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: Admin
+        password: testpass
+    RegisterRequest:
+      title: RegisterRequest
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: DemoUser1
+        password: testpass
+    AddMovieRequest:
+      title: AddMovieRequest
+      required:
+      - title
+      - director
+      - category
+      - image
+      - description
+      - yearReleased
+      type: object
+      properties:
+        title:
+          type: string
+        director:
+          type: string
+        category:
+          type: array
+          items:
+            type: string
+          description: ''
+        image:
+          type: string
+        description:
+          type: string
+        yearReleased:
+          type: integer
+          format: int32
+      example:
+        title: Hello
+        director: blabla
+        category:
+        - Sci-fi
+        - Fantasy
+        - Action
+        - Horror
+        image: /images/default.jpg
+        description: test description
+        yearReleased: 2024
+    UpdateMovieRequest:
+      title: UpdateMovieRequest
+      required:
+      - title
+      - yearReleased
+      - director
+      - category
+      - description
+      type: object
+      properties:
+        title:
+          type: string
+        yearReleased:
+          type: integer
+          format: int32
+        director:
+          type: string
+        category:
+          type: array
+          items:
+            type: string
+          description: ''
+        description:
+          type: string
+      example:
+        title: Avatar1235
+        yearReleased: 2009
+        director: James Cameron
+        category:
+        - Sci-fi
+        description: sample description
+    AddreviewRequest:
+      title: AddreviewRequest
+      required:
+      - reviewComment
+      - reviewRating
+      - movie
+      type: object
+      properties:
+        reviewComment:
+          type: string
+        reviewRating:
+          type: integer
+          format: int32
+        movie:
+          type: string
+      example:
+        reviewComment: Demo User Review
+        reviewRating: 5
+        movie: 6421189d30fb8cd0f1d6423b
+    UpdateReviewRequest:
+      title: UpdateReviewRequest
+      required:
+      - reviewComment
+      - reviewRating
+      type: object
+      properties:
+        reviewComment:
+          type: string
+        reviewRating:
+          type: integer
+          format: int32
+      example:
+        reviewComment: Demo updated review
+        reviewRating: 3
+    AddActorRequest:
+      title: AddActorRequest
+      required:
+      - fullName
+      - country
+      - movieRoles
+      type: object
+      properties:
+        fullName:
+          type: string
+        country:
+          type: string
+        movieRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieRole'
+          description: ''
+      example:
+        fullName: Brad Pitt
+        country: USA
+        movieRoles:
+        - movieId: 6426c03fee802778af27386e
+          characterName: Character One
+        - movieId: 6426c03fee802778af27386c
+          characterName: Character Two
+    MovieRole:
+      title: MovieRole
+      required:
+      - movieId
+      - characterName
+      type: object
+      properties:
+        movieId:
+          type: string
+        characterName:
+          type: string
+      example:
+        movieId: 6426c03fee802778af27386e
+        characterName: Character One
+    UpdateActorRequest:
+      title: UpdateActorRequest
+      required:
+      - fullName
+      - country
+      type: object
+      properties:
+        fullName:
+          type: string
+        country:
+          type: string
+      example:
+        fullName: New Brad Pit23
+        country: United States
+    AddMovieRoleRequest:
+      title: AddMovieRoleRequest
+      required:
+      - movieId
+      - characterName
+      type: object
+      properties:
+        movieId:
+          type: string
+        characterName:
+          type: string
+      example:
+        movieId: 6426c03fee802778af27386e
+        characterName: Character One
+tags:
+- name: Auth
+  description: ''
+- name: Movie
+  description: ''
+- name: Review
+  description: ''
+- name: Watchlist
+  description: ''
+- name: Actor
+  description: ''

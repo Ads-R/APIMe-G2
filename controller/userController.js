@@ -18,12 +18,12 @@ const login = async (req, res) => {
     }
     const token = user.generateToken()
     sendCookies(res, token)
-    res.status(200).json({success:true, msg:'Login Successful', user:{id:user._id, username:user.username,role:user.role}})
+    res.status(200).json({success:true, msg:'Login Successful', user:{id:user._id, username:user.username,role:user.role}, jwt:token})
 }
 
 const logout = async (req, res) => {
     res.cookie('apimeToken', '', {expires: new Date(Date.now())})
-    res.status(200).json({success:true, msg:'Logout Successful', httpOnly:true})
+    res.status(200).json({success:true, msg:'Logout Successful'})
 }
 
 const getCurrentUser = async (req, res) => {

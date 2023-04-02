@@ -3,6 +3,11 @@ require('dotenv').config();
 
 const cors = require('cors');
 
+//swagger
+const swagger = require('swagger-ui-express')
+const yaml =  require('yamljs')
+const swaggerDocs = yaml.load('./apime-docs.yaml')
+
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser')
@@ -29,6 +34,9 @@ app.use(cookieParser(process.env.TOKEN_SECRET))
 app.use(fileUpload({limits:{fileSize: 1024 * 512}}))
 
 app.use(cors());
+
+//swagger route
+app.use('/swagger-docs', swagger.serve, swagger.setup(swaggerDocs))
 
 //use routes
 app.use('/apime/movies', movieRoutes)

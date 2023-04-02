@@ -29,6 +29,8 @@
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^6.8.4"
+    "mongoose": "^6.8.4",
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
   }
 }

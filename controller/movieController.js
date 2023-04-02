@@ -3,6 +3,8 @@ const reviewModel = require('../models/reviewModel')
 const actorModel = require('../models/actorModel')
 const {NotFoundError, BadRequest} = require('../custom-errors')
 const {uploadImage} = require('../functions/upload-functions')
+const fs = require('fs')
+const path = require('path')
 
 const getAllMovies = async (req, res) => {
     //filter - category, title
@@ -99,8 +101,16 @@ const deleteMovie = async (req, res) => {
     if(!movie){
         throw new NotFoundError('movie', mId)
     }
+    const imagePath = path.join(__dirname, '../public'+movie.image)
+    let imageFileStatus = 'Movie Image deleted';
+    try{
+        fs.unlinkSync(imagePath)
+    }
+    catch(error){
+        imageFileStatus = 'Cannot find the movie image file, it may have been already manually deleted'
+    }
     await movie.remove()
-    res.status(200).send({success:true, msg:'Movie deleted'})
+    res.status(200).send({success:true, msg:'Movie deleted', imageFileStatus})
 }
 
 const updateMovie = async (req, res) =>{
