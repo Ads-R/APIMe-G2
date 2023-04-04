@@ -5,6 +5,7 @@ info:
   version: '1.0'
 servers:
 - url: http://localhost:3500/apime
+- url: http://YOUR_IP_HERE:3500/apime
   variables: {}
 paths:
   /user/userCheck:
@@ -18,8 +19,49 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      username:
+                        type: string
+                      role:
+                        type: string
+                example:
+                  success:  true
+                  user:
+                    id: userId
+                    username: Admin
+                    role: Administrator
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /user/logout:
     get:
@@ -30,8 +72,28 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  true
+                    msg:  Logout successful
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
       security: []
   /user/login:
@@ -57,8 +119,56 @@ paths:
         required: true
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  properties:
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        username:
+                          type: string
+                        role:
+                          type: string
+                    jwt:
+                      type: string
+                  example:
+                    success:  true
+                    msg:  Login successful
+                    user:
+                      id: userId
+                      username: Admin
+                      role: Administrator
+                    jwt:  tokenValue
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
       security: []
   /user/register:
@@ -83,9 +193,40 @@ paths:
               password: testpass
         required: true
       responses:
-        '200':
-          description: ''
+        '201':
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  true
+                    msg:  User created
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
       security: []
   /movies:
@@ -124,8 +265,64 @@ paths:
           description: The movie count per page. Default is 9 if no value entered
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    count:
+                      type: integer
+                    totalCount:
+                      type: integer
+                    movies:
+                      type: array
+                      items:
+                        properties:
+                          _id:
+                            type: integer
+                          title:
+                            type: string
+                          image:
+                            type: string
+                          movieRating:
+                            type: number
+                          reviewCount:
+                            type: integer
+                  example:
+                    success:  true
+                    count:  9
+                    totalCount: 100
+                    movies:
+                      - _id:  6426c03fee802778af273877
+                        title:  American Beauty
+                        image:  /images/american_beauty.jpg
+                        movieRating:  4.6
+                        reviewCount:  10
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     post:
       security:
@@ -166,9 +363,62 @@ paths:
               yearReleased: 2024
         required: true
       responses:
-        '200':
-          description: ''
+        '201':
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  true
+                    msg:  Movie successfully added
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /movies/{id}:
     parameters:
@@ -188,8 +438,133 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    reviewCount:
+                      type: integer
+                    movie:
+                      properties:
+                        _id:
+                          type: string
+                        title:
+                          type: string
+                        yearReleased:
+                          type: integer
+                        director:
+                          type: string
+                        category:
+                          type: array
+                        image:
+                          type: string
+                        description:
+                          type: string
+                        movieRating:
+                          type: number
+                        reviewCount:
+                          type: integer
+                    reviews:
+                      type: array
+                      items:
+                        properties:
+                          _id:
+                            type: string
+                          reviewComment:
+                            type: string
+                          reviewRating:
+                            type: integer
+                          movie:
+                            type: string
+                          user:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              username:
+                                type: string
+                          createdAt:
+                            type: string
+                          updatedAt:
+                            type: string
+                    actors:
+                      type: array
+                      items:
+                        properties:
+                          _id:
+                            type: string
+                          fullName:
+                            type: string
+                          movieRoles:
+                            type: array
+                  example:
+                    success:  true
+                    reviewCount:  10
+                    movie:
+                      - _id:  6426c03fee802778af273877
+                        title:  American Beauty
+                        yearReleased: 1999
+                        director: Sam Mendes
+                        category:
+                          - Drama
+                          - Fantasy
+                        image:  /images/american_beauty.jpg
+                        description:  Good Movie
+                        movieRating:  4.6
+                        reviewCount:  10
+                    reviews:
+                      - _id:  6426c040ee802778af273930
+                        reviewComment:  Good Movie
+                        reviewRating: 2
+                        movie:  6426c03fee802778af273877
+                        user:
+                          _id:  6426c040ee802778af2738f4
+                          username: User23
+                        createdAt:  2023-03-31T11:13:04.383Z
+                        updatedAt:  2023-03-31T11:13:04.383Z
+                    actors:
+                      - _id:  6426c040ee802778af273922
+                        fullName: Tom Hanks
+                        movieRoles:
+                          - Character One
+                          - Character Two
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     put:
       security:
@@ -223,8 +598,106 @@ paths:
         required: true
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    reviewCount:
+                      type: integer
+                    movie:
+                      properties:
+                        _id:
+                          type: string
+                        title:
+                          type: string
+                        yearReleased:
+                          type: integer
+                        director:
+                          type: string
+                        category:
+                          type: array
+                        image:
+                          type: string
+                        description:
+                          type: string
+                        movieRating:
+                          type: number
+                        reviewCount:
+                          type: integer
+                  example:
+                    success:  true
+                    reviewCount:  10
+                    movie:
+                      - _id:  6426c03fee802778af273877
+                        title:  American Beauty
+                        yearReleased: 1999
+                        director: Sam Mendes
+                        category:
+                          - Drama
+                          - Fantasy
+                        image:  /images/american_beauty.jpg
+                        description:  Good Movie
+                        movieRating:  4.6
+                        reviewCount:  10
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     delete:
       security:
@@ -236,8 +709,66 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    message:
+                      type: string
+                    imageFileStatus:
+                      type: string
+                  example:
+                    success:  true
+                    message:  Movie deleted
+                    imageFileStatus:  Movie Image deleted
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /movies/uploadMovieImage:
     post:
@@ -262,9 +793,64 @@ paths:
                   format: binary
         required: false
       responses:
-        '200':
-          description: ''
+        '201':
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    message:
+                      type: string
+                    url:
+                      type: string
+                  example:
+                    message:  Image uploaded successfully
+                    url:  /images/american_beauty.jpg
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /reviews:
     get:
@@ -277,8 +863,92 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    total:
+                      type: integer
+                    reviews:
+                      type: array
+                      items:
+                        properties:
+                          _id:
+                            type: string
+                          reviewComment:
+                            type: string
+                          reviewRating:
+                            type: integer
+                          movie:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              title:
+                                type: string
+                          user:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              username:
+                                type: string
+                          createdAt:
+                            type: string
+                          updatedAt:
+                            type: string
+                  example:
+                    success:  true
+                    total:  1000
+                    reviews:
+                      - _id:  6426c040ee802778af273928
+                        reviewComment:  Bad Movie
+                        reviewRating: 4
+                        movie:
+                          _id:  6426c03fee802778af27382a
+                          title:  Avatar
+                        user:
+                          _id:  6426c040ee802778af2738f3
+                          username: User12
+                        createdAt:  2023-03-31T11:13:04.383Z
+                        updatedAt:  2023-03-31T11:13:04.383Z
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     post:
       security:
@@ -305,9 +975,89 @@ paths:
               movie: 6421189d30fb8cd0f1d6423b
         required: true
       responses:
-        '200':
-          description: ''
+        '201':
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    message:
+                      type: string
+                    review:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        reviewComment:
+                          type: string
+                        reviewRating:
+                          type: integer
+                        movie:
+                          type: string
+                        user:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                  example:
+                    success:  true
+                    message:  A new review has been created
+                    review:
+                      _id:  6426c040ee802778af273928
+                      reviewComment:  Stunning visuals and a thought-provoking storyline make Avatar a must
+                      reviewRating: 4
+                      movie:  6426c03fee802778af27382a
+                      user: 6426c040ee802778af2738f3
+                      createdAt:  2023-03-31T11:13:04.383Z
+                      updatedAt:  2023-03-31T11:13:04.383Z
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /reviews/{id}:
     parameters:
@@ -327,8 +1077,85 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    review:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        reviewComment:
+                          type: string
+                        reviewRating:
+                          type: integer
+                        movie:
+                          type: string
+                        user:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                  example:
+                    success:  true
+                    review:
+                      _id:  6426c040ee802778af273928
+                      reviewComment:  Stunning visuals and a thought-provoking storyline make Avatar a must
+                      reviewRating: 4
+                      movie:  6426c03fee802778af27382a
+                      user: 6426c040ee802778af2738f3
+                      createdAt:  2023-03-31T11:13:04.383Z
+                      updatedAt:  2023-03-31T11:13:04.383Z
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     delete:
       security:
@@ -340,8 +1167,63 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    message:
+                      type: string
+                  example:
+                    success:  true
+                    message:  Review has been deleted
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
     put:
       security:
@@ -367,8 +1249,99 @@ paths:
         required: true
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    message:
+                      type: string
+                    review:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        reviewComment:
+                          type: string
+                        reviewRating:
+                          type: integer
+                        movie:
+                          type: string
+                        user:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                  example:
+                    success:  true
+                    message:  Review has been updated
+                    review:
+                      _id:  6426c040ee802778af273928
+                      reviewComment:  Stunning visuals and a thought-provoking storyline make Avatar a must
+                      reviewRating: 4
+                      movie:  6426c03fee802778af27382a
+                      user: 6426c040ee802778af2738f3
+                      createdAt:  2023-03-31T11:13:04.383Z
+                      updatedAt:  2023-03-31T11:13:04.383Z
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Bad Request Error Message
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Not Found Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /reviews/movie/{title}:
     parameters:
@@ -388,8 +1361,92 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: 'Success Response'
           headers: {}
+          content:
+            application/json:
+              schema:
+                  properties:
+                    success:
+                      type: boolean
+                    total:
+                      type: integer
+                    reviews:
+                      type: array
+                      items:
+                        properties:
+                          _id:
+                            type: string
+                          reviewComment:
+                            type: string
+                          reviewRating:
+                            type: integer
+                          movie:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              title:
+                                type: string
+                          user:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                              username:
+                                type: string
+                          createdAt:
+                            type: string
+                          updatedAt:
+                            type: string
+                  example:
+                    success:  true
+                    total:  5
+                    reviews:
+                      - _id:  6426c040ee802778af273928
+                        reviewComment:  Bad Movie
+                        reviewRating: 4
+                        movie:
+                          _id:  6426c03fee802778af27382a
+                          title:  Avatar
+                        user:
+                          _id:  6426c040ee802778af2738f3
+                          username: User12
+                        createdAt:  2023-03-31T11:13:04.383Z
+                        updatedAt:  2023-03-31T11:13:04.383Z
+        '401':
+          description: 'Unauthenticated'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Unauthenticated Error Message
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Forbidden Error Message
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Response-Object'
+                - type: object
+                  example:
+                    success:  false
+                    msg:  Internal Server Error
       deprecated: false
   /watchlist:
     get:
@@ -874,6 +1931,16 @@ components:
       example:
         movieId: 6426c03fee802778af27386e
         characterName: Character One
+    Response-Object:
+      type: object
+      properties:
+        success:
+          type: boolean
+        msg:
+          type: string
+      example:
+        success:  true
+        msg:  Success message
 tags:
 - name: Auth
   description: ''
