@@ -9,8 +9,8 @@ const ReviewSchema = new mongoose.Schema({
     },
     reviewRating: {
         type: Number,
-        max: 5,
-        min: 1,
+        max: [5, 'Maximum rating allowed is 5'],
+        min: [1, 'Minimum rating allowed is 1'],
         required: [true, 'Review rating is required']
     },
     movie: {

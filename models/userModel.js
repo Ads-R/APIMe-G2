@@ -6,12 +6,12 @@ const UserSchema = new mongoose.Schema({
     username:{
         type:String,
         required: [true, 'Username is required'],
-        minlength: 5
+        minlength: [5, 'Username is shorter than the minimum allowed length of 5']
     },
     password:{
         type:String,
         required: [true, 'Password is required'],
-        minlength: 8
+        minlength: [8, 'Password is shorter than the minimum allowed length of 5']
     },
     role:{
         type:String,
